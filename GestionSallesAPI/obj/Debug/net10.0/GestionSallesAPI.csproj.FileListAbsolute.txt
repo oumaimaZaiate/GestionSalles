@@ -100,3 +100,4 @@ C:\GestionSalles\GestionSallesAPI\obj\Debug\net10.0\refint\GestionSallesAPI.dll
 C:\GestionSalles\GestionSallesAPI\obj\Debug\net10.0\GestionSallesAPI.pdb
 C:\GestionSalles\GestionSallesAPI\obj\Debug\net10.0\GestionSallesAPI.genruntimeconfig.cache
 C:\GestionSalles\GestionSallesAPI\obj\Debug\net10.0\ref\GestionSallesAPI.dll
+C:\GestionSalles\GestionSallesAPI\obj\Debug\net10.0\GestionSallesAPI.sourcelink.json

@@ -3,6 +3,7 @@ using GestionSallesAPI.Services;
 using MongoDB.Driver; 
 using Microsoft.Extensions.Options; // Permet de récupérer les paramètres du fichier appsettings.json.
 using GestionSallesAPI.Models;
+using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args); // le role est de créer un objet builder qui va nous permettre de configurer notre application
 
 // Add services to the container.
@@ -14,8 +15,11 @@ builder.Services.AddSingleton<SalleService>();
 builder.Services.AddSingleton<BatimentService>();
 builder.Services.AddSingleton<FaculteService>();
 
-builder.Services.AddControllers(); 
-builder.Services.AddEndpointsApiExplorer(); // pour explorer les endpoints de l'API
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });builder.Services.AddEndpointsApiExplorer(); // pour explorer les endpoints de l'API
 builder.Services.AddSwaggerGen(); // pour générer la documentation de l'API avec Swagger
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

@@ -35,7 +35,12 @@ public class BatimentController : ControllerBase
 
     public async Task<IActionResult> CreateBatiment(Batiment batiment)
     {
+            Console.WriteLine($"Description reçue = '{batiment.Description}'");
+
         await _service.CreateBatiment(batiment);
+ var saved = await _service.GetBatimentById(batiment.Id!);
+
+    Console.WriteLine($"Après lecture Mongo : '{saved?.Description}'");
         return CreatedAtAction(nameof(GetBatimentById),new {id = batiment.Id },batiment);
     }
     [HttpPut("{id}")]

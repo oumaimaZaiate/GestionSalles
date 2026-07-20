@@ -2,7 +2,8 @@ using GestionSallesAPI.Settings;
 using GestionSallesAPI.Models;
 using GestionSallesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization; // for working with ASP.NET Core MVC features
+using Microsoft.AspNetCore.Authorization;
+using GestionSallesAPI.Enums; // for working with ASP.NET Core MVC features
 
 namespace GestionSallesAPI.Controllers;
 
@@ -48,6 +49,17 @@ public async Task<IActionResult> DeleteSalle(string id)
     {
         await _service.DeleteSalle(id);
         return NoContent(); // Return a 204 No Content response to indicate successful deletion
+    }
+[HttpGet("specifications")]
+public IActionResult GetSpecifications()
+{
+    return Ok(Enum.GetNames<SpecificationSalle>());
+}
+
+[HttpGet("Categories")]
+public IActionResult GetCategorieSalle()
+    {
+        return Ok(Enum.GetNames<CategorieSalle>());
     }
 
 

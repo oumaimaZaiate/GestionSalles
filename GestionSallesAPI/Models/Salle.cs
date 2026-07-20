@@ -1,4 +1,5 @@
 
+using GestionSallesAPI.Enums;
 using MongoDB.Bson;   // Import the MongoDB.Bson namespace for working with BSON binary json data types 
 using MongoDB.Bson.Serialization.Attributes; // Import the MongoDB.Bson.Serialization.Attributes namespace for working with BSON serialization attributes 
 
@@ -12,13 +13,16 @@ public class Salle
     public string Intitule { get; set; } = string.Empty; // Initialize Intitule to an empty string to avoid null reference issues
     public int Capacite { get; set; }
     public int Capacite_exam { get; set; }
-    public string Categorie { get; set; }
+    public CategorieSalle Categorie { get; set; }
     public int Surface { get; set; }
+    
+    [BsonRepresentation(BsonType.String)]
+    public List<SpecificationSalle> Specifications {get; set;} = new ();
     public string Etage { get; set; } = string.Empty;
     [BsonRepresentation(BsonType.ObjectId)]
     public string? FaculteId {get; set;} 
     [BsonIgnore]
-    public Faculte Faculte {get; set;} = new Faculte();
+    public Faculte? Faculte {get; set;} 
     [BsonRepresentation(BsonType.ObjectId)]
     public string? BatimentId {get; set;}
     [BsonIgnore]
