@@ -1,0 +1,100 @@
+<div>
+
+ 
+
+<!--
+  <igx-input-group type="search" class="search-bar">
+    <igx-prefix>
+      <igx-icon *ngIf="searchText.length === 0">search</igx-icon>
+      <igx-icon *ngIf="searchText.length > 0" (click)="clearSearch()">clear</igx-icon>
+    </igx-prefix>
+    <input
+        igxInput
+        placeholder="Rechercher une salle..."
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearchChange()" />
+  </igx-input-group>
+<br>
+-->
+  <igx-grid
+      #grid
+      [data]="salles"
+      [autoGenerate]="false"
+      [allowFiltering]="true"
+      primaryKey="id"
+      width="100%"
+      height="600px">
+
+      <igx-grid-toolbar>
+          <igx-grid-toolbar-title>Salles</igx-grid-toolbar-title>
+          <igx-grid-toolbar-actions>
+              <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+              <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+              <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
+               <button igxButton="contained" (click)="openCreateDialog()">
+      <igx-icon>add</igx-icon>
+      Ajouter une salle
+    </button>
+          </igx-grid-toolbar-actions>
+      </igx-grid-toolbar>
+
+      <igx-column field="intitule" header="Intitulé" [sortable]="true" [resizable]="true"></igx-column>
+      <igx-column field="capacite" header="Capacité" [sortable]="true" [resizable]="true" dataType="number"></igx-column>
+      <igx-column field="capacite_exam" header="Capacité Exam" [sortable]="true" [resizable]="true" dataType="number"></igx-column>
+      <igx-column field="categorie" header="Catégorie" [sortable]="true" [resizable]="true"></igx-column>
+      <igx-column field="specifications" header="Spécifications" [sortable]="true" [resizable]="true"></igx-column>
+
+      <igx-column field="surface" header="Surface" [sortable]="true" [resizable]="true" dataType="number">
+          <ng-template igxCell let-cell="cell">
+              {{ cell.value }} m²
+          </ng-template>
+      </igx-column>
+
+      <igx-column field="etage" header="Étage" [sortable]="true" [resizable]="true"></igx-column>
+
+      <igx-column field="faculte.intitule" header="Faculté" [sortable]="true" [resizable]="true">
+          <ng-template igxCell let-cell="cell">
+              {{ cell.row.data.faculte?.intitule || '—' }}
+          </ng-template>
+      </igx-column>
+
+      <igx-column field="batiment.intitule" header="Bâtiment" [sortable]="true" [resizable]="true">
+          <ng-template igxCell let-cell="cell">
+              {{ cell.row.data.batiment?.intitule || '—' }}
+          </ng-template>
+      </igx-column>
+
+      <igx-column header="Actions" [sortable]="false" [filterable]="false" [pinned]="true" width="140px">
+          <ng-template igxCell let-cell="cell">
+
+              <button igxIconButton="flat" igxRipple [igxTooltipTarget]="tooltipEdit"
+    (click)="openEditDialog(cell.row.data.id)">
+    <igx-icon>edit</igx-icon>
+</button>
+<span #tooltipEdit="tooltip" igxTooltip>Modifier</span>
+              <button igxIconButton="flat" igxRipple [igxTooltipTarget]="tooltipDelete"
+                  (click)="deleteSalle(cell.row.data.id)">
+                  <igx-icon>delete</igx-icon>
+              </button>
+              <span #tooltipDelete="tooltip" igxTooltip>Supprimer</span>
+
+          </ng-template>
+      </igx-column>
+
+      <igx-paginator [perPage]="15"></igx-paginator>
+
+  </igx-grid>
+ <igx-dialog #createDialog title="Ajouter une salle" closeOnOutsideSelect="true">
+    <app-salle-create
+        (saved)="onSalleSaved()"
+        (cancelled)="onCreateCancelled()">
+    </app-salle-create>
+  </igx-dialog>
+  <igx-dialog #editDialog title="Modifier la salle" closeOnOutsideSelect="true">
+  <app-salle-edit
+      [id]="selectedSalleId"
+      (saved)="onSalleUpdated()"
+      (cancelled)="onEditCancelled()">
+  </app-salle-edit>
+</igx-dialog>
+</div>

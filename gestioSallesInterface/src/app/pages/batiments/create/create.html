@@ -1,0 +1,57 @@
+<form class="app-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <h2>Ajouter un bâtiment</h2>
+        
+
+  <div class="app-field">
+    <label for="intitule">Intitulé</label>
+    <input id="intitule" type="text" formControlName="intitule" placeholder="Nom du bâtiment" />
+    <span class="app-field-error" *ngIf="f.intitule.invalid && f.intitule.touched">
+      <span *ngIf="f.intitule.errors?.['required']">L'intitulé est requis.</span>
+      <span *ngIf="f.intitule.errors?.['maxlength']">L'intitulé est trop long.</span>
+    </span>
+  </div>
+  <div class="app-field">
+    <label for="description">Description</label>
+    <input id="description" type="text" formControlName="description" placeholder="Description du bâtiment" />
+    <span class="app-field-error" *ngIf="f.description.invalid && f.description.touched">
+      <span *ngIf="f.description.errors?.['maxlength']">La description est trop long.</span>
+    </span>
+  </div>
+<div class="app-field">
+  <label>Choisir l'emplacement (cliquez sur la carte)</label>
+  <div id="map" #mapContainer></div>
+ 
+</div>
+  <div class="app-field-row">
+    <div class="app-field-row">
+
+    <div class="app-field">
+        <label>Latitude</label>
+ 
+        <input
+            type="number"
+            formControlName="latitude"
+            readonly>
+    </div>
+
+    <div class="app-field">
+        <label>Longitude</label>
+
+        <input
+            type="number"
+            formControlName="longitude"
+            readonly>
+    </div>
+
+</div>
+  </div>
+
+  <span class="app-field-error" *ngIf="error">{{ error }}</span>
+
+  <div class="app-form-actions">
+    <button type="button" (click)="onCancel()">Annuler</button>
+    <button type="submit" [disabled]="submitting">
+      {{ submitting ? 'Enregistrement...' : 'Enregistrer' }}
+    </button>
+  </div>
+</form>

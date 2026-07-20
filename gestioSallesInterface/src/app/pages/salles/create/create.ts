@@ -1,0 +1,196 @@
+import { Component, inject, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { SalleService } from '../../../services/salle';
+import { Salle } from '../../../models/salle';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Faculte } from '../../../models/faculte';
+import { Batiment } from '../../../models/batiment';
+import { BatimentService } from '../../../services/batiment';
+import { FaculteService } from '../../../services/faculte';
+import {  IgxDialogComponent, IgxDialogModule } from 'igniteui-angular';
+
+@Component({
+  selector: 'app-salle-create',
+  imports: [CommonModule,
+    ReactiveFormsModule,
+    IgxDialogModule
+ 
+  ],
+  templateUrl: './create.html',
+  
+})
+export class SalleCreateComponent implements OnInit {
+  private salleService = inject(SalleService);
+  private fb = inject(FormBuilder);
+  private faculteService = inject(FaculteService);
+  private batimentService = inject(BatimentService);
+
+  @ViewChild('specDialog',{static: true }) specDialog! : IgxDialogComponent;
+
+
+etages = Array.from({ length: 8 }, (_, i) => i - 1);
+
+facultes: Faculte[] = [];
+batiments: Batiment[] = [];
+specifications :string[] =[];
+tempSpecifications :string[] =[];
+specificationsSorted: string[] = [];
+categories :string[] =[];
+saving = false;
+
+
+
+  @Output() saved = new EventEmitter<Salle>();
+  @Output() cancelled = new EventEmitter<void>();
+
+ngOnInit(): void {
+  this.loadFacultes();
+  this.loadBatiments();
+  this.loadSpecifications();
+  this.loadCategories();
+}
+loadFacultes() {
+  this.faculteService.getFacultes().subscribe({
+    next: (data) => {
+      this.facultes = data;
+    },
+    error: (err) => console.error(err)
+  });
+}
+loadSpecifications(){
+  this.salleService.getSpecifications().subscribe({
+    next: (data) =>{
+      this.specifications = data ;
+    },
+    error: (err) => console.error(err)
+  })
+}
+loadCategories(){
+  this.salleService.getCategories().subscribe({
+    next: (data) => {
+      this.categories = data;
+    },
+    error: (err) => console.error(err)
+  })
+}
+
+loadBatiments() {
+  this.batimentService.getBatiments().subscribe({
+    next: (data) => {
+      this.batiments = data;
+    },
+    error: (err) => console.error(err)
+  });
+}
+
+  form = this.fb.group({
+    intitule: ['',Validators.required],
+    capacite: [0,Validators.required],
+    capacite_exam: [0, Validators.required],
+    categorie: ['', Validators.required],
+    specifications :[[] as string[]],
+    surface: [0, Validators.required],
+    etage: ['', Validators.required],
+    faculteId: ['', Validators.required],
+    batimentId: ['', Validators.required],
+    
+  })
+
+createSalle(){
+  if(this.form.invalid){
+    this.form.markAllAsTouched();
+    return;
+  }
+  this.saving = true;
+  const salle = this.form.value as Salle;
+  this.salleService.createSalle(salle).subscribe({
+    next: (created) => { 
+      this.saving = false;
+        this.form.reset({
+          intitule: '', capacite: 0, capacite_exam: 0,
+          categorie: '',specifications: [] , surface: 0, etage: '', faculteId: '', batimentId: '',
+        });
+        this.saved.emit(created);
+    },
+    error: err => {
+      this.saving = false;
+      console.error(err)}
+  });
+}
+
+OpenSpecDialog():void {
+    console.log("form :", this.form.value.specifications);
+  console.log("temp :", this.tempSpecifications);
+  const selected = this.selectedSpecifications;
+  this.specificationsSorted =[...this.specifications]
+  .sort((a,b)=>
+  {
+    const aSelected = selected.includes(a);
+    const bSelected = selected.includes(b);
+    if (aSelected !== bSelected) return aSelected ? -1 : 1;
+    return a.localeCompare(b);
+  });
+  this.tempSpecifications = [ ...selected];
+  this.specDialog.open();
+}
+toggleTempSpec(spec: string): void {
+  const index = this.tempSpecifications.indexOf(spec);
+  if(index > -1){
+    this.tempSpecifications.splice(index,1);
+  }
+  else {
+    this.tempSpecifications.push(spec);
+  }
+}
+closeSpecDialog() : void{
+  this.specDialog.close();
+}
+confirmSpecs(): void{
+  this.form.get('specifications')?.setValue([...this.tempSpecifications]);
+  this.specDialog.close();
+}
+get selectedSpecifications(){
+  return this.form.get('specifications')?.value ?? [];
+}
+onSpecificationChange(spec: string, checked: boolean) {
+  const current = this.form.controls.specifications.value ?? [];
+
+  if (checked) {
+    if (!current.includes(spec)) {
+      this.form.controls.specifications.setValue([...current, spec]);
+    }
+  } else {
+    this.form.controls.specifications.setValue(
+      current.filter(s => s !== spec)
+    );
+  }
+
+  console.log(this.form.controls.specifications.value);
+}
+ onCancel() {
+    console.log(this.form.value.specifications);
+  console.log(this.tempSpecifications);
+
+
+    this.cancelled.emit();
+ this.form.reset({
+    intitule: '',
+    capacite: 0,
+    capacite_exam: 0,
+    categorie: '',
+    specifications: [],
+    surface: 0,
+    etage: '',
+    faculteId: '',
+    batimentId: '',
+  });
+
+  this.tempSpecifications = [];
+  this.specificationsSorted = [];
+
+
+      console.log(this.form.value.specifications);
+  console.log(this.tempSpecifications);
+  }
+}

@@ -1,0 +1,367 @@
+/* You can add global styles to this file, and also import other style files */
+
+:root {
+  --color-primary: #0F6E56;
+  --color-primary-hover: #0B5A45;
+  --color-text: #26211C;
+  --color-text-muted: #5F5E5A;
+  --color-border: #D3D1C7;
+  --color-border-focus: #0F6E56;
+  --color-bg-field: #FFFFFF;
+  --color-danger: #B3261E;
+  --radius: 8px;
+
+  --color-accent-blue: #378ADD;
+  --color-accent-blue-bg: #E6F1FB;
+  --color-accent-blue-text: #0C447C;
+  --color-accent-blue-border: #B5D4F4;
+}
+.switch-button{
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    border-radius: 2px !important;
+    font-weight:500;
+    color: var(--color-accent-blue) !important;
+    background: transparent !important;
+    border: 1px solid var(--color-accent-blue) !important;
+    padding: px 16px !important;
+    height: auto !important;
+    
+    cursor: pointer;
+    transition: background-color .15s ease, color .15s ease;
+}
+
+.switch-button:hover{
+    background-color: var(--color-accent-blue) !important;
+    color: #fff !important;
+}
+
+
+.igx-dialog__window {
+  width: 650px;
+  max-width: 95vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Le titre reste fixe */
+.igx-dialog__window-title {
+  flex-shrink: 0;
+}
+
+/* Seul le contenu scrolle */
+.igx-dialog__window-content {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.igx-dialog__window-actions {
+  flex-shrink: 0;
+}
+
+.app-form {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: 80vh;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 4px;
+  }
+}
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:1rem;
+    padding-right: 16px; /* ajuste selon l'écart observé */
+
+}
+
+.page-title{
+    margin:0;
+    font-size:2rem;
+    font-weight:600;
+}
+
+
+/* --- Spécifications --- */
+
+.spec-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spec-add-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+}
+
+.spec-add-btn:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+.spec-scroll-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg-field);
+  padding: 8px 10px;
+  max-height: 160px;
+  overflow-y: auto;
+  min-height: 38px;
+  align-content: flex-start;
+}
+
+.spec-empty {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  padding: 4px 2px;
+}
+
+.spec-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 6px 3px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--color-accent-blue-border);
+  background: var(--color-accent-blue-bg);
+  color: var(--color-accent-blue-text);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.spec-checklist {
+  max-height: 340px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px 16px;
+  margin: 16px 0 8px;
+  padding-right: 8px;
+}
+
+.spec-checklist-item label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+  font-size: 14px;
+  color: #333;
+}
+
+.spec-checklist-item label:hover {
+  background-color: #f2f5fa;
+}
+
+.spec-checklist-item input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border: 2px solid #b0b8c4;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.spec-checklist-item input[type="checkbox"]:checked {
+  background-color: #2196f3;
+  border-color: #2196f3;
+}
+
+.spec-checklist-item input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 4px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.spec-checklist-item input[type="checkbox"]:hover {
+  border-color: #2196f3;
+}
+
+.spec-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e8ec;
+}
+
+.spec-dialog-actions button {
+  padding: 8px 20px;
+  border-radius: 6px;
+  border: 1px solid #d0d5db;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s ease;
+}
+
+.spec-dialog-actions button:last-child {
+  background-color: #2196f3;
+  border-color: #2196f3;
+  color: white;
+}
+
+.spec-dialog-actions button:last-child:hover {
+  background-color: #1976d2;
+}
+
+.spec-dialog-actions button:first-child:hover {
+  background-color: #f2f5fa;
+}
+
+.app-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  input:not(.igx-input-group__input),
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--color-text);
+    background: var(--color-bg-field);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 3px rgba(15, 110, 86, 0.15);
+    }
+
+    &.ng-invalid.ng-touched {
+      border-color: var(--color-danger);
+    }
+  }
+
+  .app-field-error {
+    font-size: 12px;
+    color: var(--color-danger);
+  }
+}
+
+.app-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.app-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+
+  button {
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--radius);
+    padding: 9px 18px;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+
+  button[type="submit"] {
+    background: var(--color-primary);
+    color: #fff;
+
+    &:hover {
+      background: var(--color-primary-hover);
+    }
+
+    &:disabled {
+      background: var(--color-border);
+      cursor: not-allowed;
+    }
+  }
+
+  button[type="button"] {
+    background: transparent;
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+}
+
+@media (max-width: 600px) {
+  .igx-dialog__window {
+    width: 650px !important;
+    max-width: 95vw !important;
+    max-height: 85vh !important;
+    border-radius: 0;
+  }
+}
+
+.app-field igx-combo.ng-invalid.ng-touched {
+  --igx-input-group-border-color: var(--color-danger);
+  --igx-input-group-focused-border-color: var(--color-danger);
+}
+
+.app-field igx-combo .igx-input-group__bundle {
+  border-radius: var(--radius) !important;
+  background: var(--color-bg-field) !important;
+  box-shadow: none !important;
+  min-height: unset;
+  padding: 0 4px;
+}
+
+.app-field igx-combo .igx-input-group__border {
+  display: none !important;
+}
+
+.app-field igx-combo input,
+.app-field igx-combo .igx-input-group__input {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+  padding: 9px 8px;
+}
+
+.app-field igx-combo:focus-within .igx-input-group__bundle::before {
+  box-shadow: inset 0 0 0 0.0625rem var(--color-border-focus) !important;
+}
+
+.app-field igx-combo:focus-within .igx-input-group__bundle {
+  box-shadow: 0 0 0 3px rgba(15, 110, 86, 0.15) !important;
+}
