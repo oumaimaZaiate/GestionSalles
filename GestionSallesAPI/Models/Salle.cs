@@ -1,30 +1,22 @@
 
 using GestionSallesAPI.Enums;
-using MongoDB.Bson;   // Import the MongoDB.Bson namespace for working with BSON binary json data types 
-using MongoDB.Bson.Serialization.Attributes; // Import the MongoDB.Bson.Serialization.Attributes namespace for working with BSON serialization attributes 
+using System.Text.Json.Serialization;
 
 namespace GestionSallesAPI.Models; // Define the namespace
 
 public class Salle
 {
-    [BsonId] // Mark the Id property as PK
-    [BsonRepresentation(BsonType.ObjectId)] // Id represented as an ObjectId in the database
-    public string? Id { get; set; } // le ? pour que le id peut etre null on peut le laisser null a fin de l'auto incrementer par mongoDB
+     public int Id { get; set; } // le ? pour que le id peut etre null on peut le laisser null a fin de l'auto incrementer par mongoDB
     public string Intitule { get; set; } = string.Empty; // Initialize Intitule to an empty string to avoid null reference issues
     public int Capacite { get; set; }
     public int Capacite_exam { get; set; }
     public CategorieSalle Categorie { get; set; }
     public int Surface { get; set; }
-    
-    [BsonRepresentation(BsonType.String)]
-    public List<SpecificationSalle> Specifications {get; set;} = new ();
+    public ICollection<Specification> Specifications {get; set;} = new List<Specification>();
     public string Etage { get; set; } = string.Empty;
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? FaculteId {get; set;} 
-    [BsonIgnore]
+    public int FaculteId {get; set;} 
+    public bool Etat {get; set;} = true;
     public Faculte? Faculte {get; set;} 
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? BatimentId {get; set;}
-    [BsonIgnore]
+    public int BatimentId {get; set;}
     public Batiment? Batiment {get; set;} 
 }

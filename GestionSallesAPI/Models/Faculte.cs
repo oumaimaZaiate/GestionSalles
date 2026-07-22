@@ -1,13 +1,11 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
+using System.Text.Json.Serialization;
 namespace GestionSallesAPI.Models;
 
 public class Faculte
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id {get; set;}
+    public int Id {get; set;}
     public string Intitule {get;set;} = string.Empty;
-    //public ICollection<Salle> Salles {get; set;} = new List<Salle>();
+ [JsonIgnore]
+    public ICollection<Salle> Salles {get; set;} = new List<Salle>();
 }

@@ -1,37 +1,36 @@
-using GestionSallesAPI.Settings;
 using GestionSallesAPI.Services;
-using MongoDB.Driver; 
-using Microsoft.Extensions.Options; // Permet de récupérer les paramètres du fichier appsettings.json.
 using GestionSallesAPI.Models;
+using Microsoft.EntityFrameworkCore;
+using GestionSallesAPI.DBSettings;
 using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args); // le role est de créer un objet builder qui va nous permettre de configurer notre application
 
-// Add services to the container.
+//BD
+builder.Services.AddDbContext<AppDbContext>(
+options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.Configure<MongoDbSettings>(
-builder.Configuration.GetSection("MongoDbSettings")); // configure les paramètres de connexion à MongoDB à partir du fichier appsettings.json
 //services 
-builder.Services.AddSingleton<SalleService>();
-builder.Services.AddSingleton<BatimentService>();
-builder.Services.AddSingleton<FaculteService>();
+builder.Services.AddScoped<SalleService>();
+builder.Services.AddScoped<BatimentService>();
+builder.Services.AddScoped<FaculteService>();
+builder.Services.AddScoped<SpecificationService>();
 
 builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });builder.Services.AddEndpointsApiExplorer(); // pour explorer les endpoints de l'API
+
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
+builder.Services.AddEndpointsApiExplorer(); // pour explorer les endpoints de l'API
 builder.Services.AddSwaggerGen(); // pour générer la documentation de l'API avec Swagger
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddSingleton<IMongoDatabase>(sp =>
-{
-    var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
 
-    var client = new MongoClient(settings.ConnectionString);
-
-    return client.GetDatabase(settings.DatabaseName);
-});builder.Services.AddCors(options =>
+builder.Services.AddCors(options =>
 {
     options.AddPolicy("Angular",
         policy =>

@@ -1,12 +1,12 @@
 using GestionSallesAPI.Models;
-using GestionSallesAPI.Services;    
+using GestionSallesAPI.Services;
+using Microsoft.AspNetCore.Mvc;
+
 
 namespace GestionSallesAPI.Controllers;
 
 
-using GestionSallesAPI.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+
 
 
 [ApiController]
@@ -27,30 +27,28 @@ public class BatimentController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Batiment?>> GetBatimentById(string id)
+    public async Task<ActionResult<Batiment?>> GetBatimentById(int id)
     {
         return await _service.GetBatimentById(id);
     }
-    [HttpPost]
 
+    [HttpPost]
     public async Task<IActionResult> CreateBatiment(Batiment batiment)
     {
-            Console.WriteLine($"Description reçue = '{batiment.Description}'");
-
         await _service.CreateBatiment(batiment);
- var saved = await _service.GetBatimentById(batiment.Id!);
+        return CreatedAtAction(nameof(GetBatimentById),new {id = batiment.Id} , batiment );
 
-    Console.WriteLine($"Après lecture Mongo : '{saved?.Description}'");
-        return CreatedAtAction(nameof(GetBatimentById),new {id = batiment.Id },batiment);
     }
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateBatiment(string id, Batiment batiment)
+    public async Task<IActionResult> UpdateBatiment(int id, Batiment batiment)
     {
-        await _service.UpdateBatiment(id,batiment);
+                if(id != batiment.Id)
+        return BadRequest("L'identifiant ne correspond pas.");
+        await _service.UpdateBatiment(batiment);
         return NoContent();
     }
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteBatiment(string id)
+    public async Task<IActionResult> DeleteBatiment(int id)
     {
         await _service.DeleteBatiment(id);
         return NoContent();

@@ -1,42 +1,49 @@
-using GestionSallesAPI.Settings;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 using GestionSallesAPI.Models;
+using GestionSallesAPI.DBSettings;
 
 namespace GestionSallesAPI.Services;
 
 public class FaculteService 
 {
-    private readonly IMongoCollection<Faculte> _facultes;
+    private readonly AppDbContext _context;
 
-    public FaculteService(IMongoDatabase database, IOptions<MongoDbSettings> settings)
+    public FaculteService(AppDbContext context)
     {
-        _facultes = database.GetCollection<Faculte>(settings.Value.FaculteCollectionName);
+    _context = context;
     }
 
     public async Task<List<Faculte>> GetFacultes()
     {
-        return await _facultes.Find(_ => true).ToListAsync();
+        return await _context.Facultes
+        .Include(f => f.Salles)
+        .ToListAsync();
     }
 
-    public async Task<Faculte> GetFaculteById(string id)
+    public async Task<Faculte?> GetFaculteById(int id)
     {
-        return await _facultes.Find(x => x.Id == id).FirstOrDefaultAsync();
+        return await _context.Facultes
+        .Include(f => f.Salles)
+        .FirstOrDefaultAsync(f => f.Id == id);
     }
     public async Task CreateFaculte(Faculte faculte)
     {
-        await _facultes.InsertOneAsync(faculte);
+         _context.Facultes.Add(faculte);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateFaculte(string id,Faculte faculte)
+    public async Task UpdateFaculte(Faculte faculte)
     {
-        faculte.Id = id;
-        await _facultes.ReplaceOneAsync(x => x.Id == id,faculte);
-    }
+         _context.Facultes.Update(faculte);
+        await _context.SaveChangesAsync();
+           }
 
-    public async Task DeleteFaculte(string id)
+    public async Task DeleteFaculte(int id)
     {
-        await _facultes.DeleteOneAsync(x => x.Id == id);
-    }
+        var faculte = await _context.Facultes.FindAsync(id);
+        if(faculte != null){
+        _context.Facultes.Remove(faculte);
+        await _context.SaveChangesAsync(); 
+        }   }
 
 };

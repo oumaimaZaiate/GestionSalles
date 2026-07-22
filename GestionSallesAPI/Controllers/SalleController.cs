@@ -1,8 +1,6 @@
-using GestionSallesAPI.Settings;
 using GestionSallesAPI.Models;
 using GestionSallesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using GestionSallesAPI.Enums; // for working with ASP.NET Core MVC features
 
 namespace GestionSallesAPI.Controllers;
@@ -13,10 +11,12 @@ namespace GestionSallesAPI.Controllers;
 public class SalleController : ControllerBase // Inherit from ControllerBase to gain access to controller features
 {
 private readonly SalleService _service; // Declare a private read-only field for the SalleService
-
-public SalleController(SalleService service) // Constructor to inject the SalleService
+private readonly SpecificationService _specificationService;
+public SalleController(SalleService service, SpecificationService specificationService) // Constructor to inject the SalleService
 {
     _service = service; // Assign the injected service to the private field
+    _specificationService = specificationService;
+
 }
 
 [HttpGet]
@@ -26,7 +26,7 @@ public async Task<ActionResult<List<Salle>>> GetSalles() // Define an HTTP GET e
     }
 
 [HttpGet("{id}")] // Define an HTTP GET endpoint to retrieve a salle by its ID
-public async Task<ActionResult<Salle?>> GetSalleById(string id)
+public async Task<ActionResult<Salle?>> GetSalleById(int id)
     {
         return await _service.GetSalleById(id);
     }
@@ -39,21 +39,23 @@ public async Task<IActionResult> CreateSalle(Salle salle)
     }
 
 [HttpPut("{id}")]
-public async Task<IActionResult> UpdateSalle(string id,Salle salle)
-    {
-        await _service.UpdateSalle(id,salle);
+public async Task<IActionResult> UpdateSalle(int id,Salle salle)
+    {  
+        if(id != salle.Id)
+        return BadRequest("L'identifiant ne correspond pas.");
+        await _service.UpdateSalle(salle);
         return NoContent();
     }
 [HttpDelete("{id}")]
-public async Task<IActionResult> DeleteSalle(string id)
+public async Task<IActionResult> DeleteSalle(int id)
     {
         await _service.DeleteSalle(id);
         return NoContent(); // Return a 204 No Content response to indicate successful deletion
     }
 [HttpGet("specifications")]
-public IActionResult GetSpecifications()
+public async Task<ActionResult<List<Specification>>> GetSpecifications()
 {
-    return Ok(Enum.GetNames<SpecificationSalle>());
+    return await _specificationService.GetSpecifications();
 }
 
 [HttpGet("Categories")]
@@ -63,9 +65,15 @@ public IActionResult GetCategorieSalle()
     }
 
 
+[HttpPatch("{id}/etat")]
+public async Task<IActionResult> ChangerEtat(int id)
+{
+    var result = await _service.ChangerEtat(id);
 
+    if (!result)
+        return NotFound();
 
-
-
+    return NoContent();
+}
 
 }

@@ -1,39 +1,48 @@
-using MongoDB.Driver;
 using GestionSallesAPI.Models;
-using GestionSallesAPI.Settings;
-using Microsoft.Extensions.Options;
+using GestionSallesAPI.DBSettings;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestionSallesAPI.Services;
 public class BatimentService
 {
-    private readonly IMongoCollection<Batiment> _batiments;
-    public BatimentService(IMongoDatabase database, IOptions<MongoDbSettings> settings)
+    private readonly AppDbContext _context;
+    public BatimentService(AppDbContext context)
     {
-        _batiments = database.GetCollection<Batiment>(settings.Value.BatimentCollectionName);
+    _context = context ;
     }
 
     public async Task<List<Batiment>> GetBatiments()
     {
-        return await _batiments.Find(_ => true).ToListAsync();
+        return await _context.Batiments
+        .Include(b => b.Salles)
+        .ToListAsync();
     }
 
-    public async Task<Batiment?> GetBatimentById(string id)
+    public async Task<Batiment?> GetBatimentById(int id)
     {
-        return await _batiments.Find(x => x.Id == id).FirstOrDefaultAsync();
+         return await _context.Batiments
+        .Include(b => b.Salles)
+        .FirstOrDefaultAsync(b => b.Id == id);
     }
     public async Task CreateBatiment (Batiment batiment)
     {
-        await _batiments.InsertOneAsync(batiment);
+        _context.Batiments.Add(batiment);
+        await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateBatiment(string id,Batiment batiment)
+    public async Task UpdateBatiment(Batiment batiment)
     {
-     batiment.Id = id;
-     await _batiments.ReplaceOneAsync(x => x.Id == id,batiment);  
-    }
+     _context.Batiments.Update(batiment);
+        await _context.SaveChangesAsync();  
+     }
 
-    public async Task DeleteBatiment(string id)
+    public async Task DeleteBatiment(int id)
     {
-        await _batiments.DeleteOneAsync(x => x.Id == id);
+        var batiment = await _context.Batiments.FindAsync(id);
+        if(batiment != null)
+        {
+             _context.Batiments.Remove(batiment);
+        await _context.SaveChangesAsync();
+        }
     }
 }

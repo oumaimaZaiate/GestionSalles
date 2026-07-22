@@ -1,79 +1,104 @@
-using GestionSallesAPI.Settings;
 using GestionSallesAPI.Models;
-using Microsoft.Extensions.Options; // Permet de récupérer les paramètres du fichier appsettings.json.
-using MongoDB.Driver; // Permet de se connecter à la base de données MongoDB
+using GestionSallesAPI.DBSettings;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestionSallesAPI.Services;
 
 public class SalleService
 {
-    private readonly IMongoCollection<Salle> _salles;
-    private readonly IMongoCollection<Batiment> _batiments;
-    private readonly IMongoCollection<Faculte> _facultes;
+    
 
 //constructeur
-  public SalleService(IMongoDatabase database, IOptions<MongoDbSettings> settings) // sert à récupérer les paramètres de configuration
-    {
-        _salles = database.GetCollection<Salle>(settings.Value.SalleCollectionName); // récupère la collection de salles à partir de la base de données MongoDB
-        _facultes = database.GetCollection<Faculte>(settings.Value.FaculteCollectionName);
-        _batiments = database.GetCollection<Batiment>(settings.Value.BatimentCollectionName);
-    }
+private readonly AppDbContext _context;
+
+public SalleService(AppDbContext context)
+{
+    _context = context;
+}
+ 
 
 public async Task<List<Salle>> GetSalles  ()  //return une list de salles
     {
-        var salles = await _salles.Find(_ => true).ToListAsync();
-           foreach(var salle in salles ) {
-            if (!string.IsNullOrEmpty(salle.FaculteId))
-            {
-                salle.Faculte = await _facultes
-                .Find(f => f.Id == salle.FaculteId)
-                .FirstOrDefaultAsync();
-            }
-            if (!string.IsNullOrEmpty(salle.BatimentId))
-            {
-                salle.Batiment = await _batiments
-                .Find(b => b.Id == salle.BatimentId)
-                .FirstOrDefaultAsync();
-            };
-            };
-
-    return salles;
+       return await _context.Salles
+     .Include(s => s.Batiment)
+       .Include(s => s.Faculte)
+       .Include(s => s.Specifications)
+       .ToListAsync();
     }
 
 
 
-public async Task<Salle?> GetSalleById(string id)
+public async Task<Salle?> GetSalleById(int id)
     {
-        var salle = await _salles.Find(x => x.Id == id).FirstOrDefaultAsync();
-         if (!string.IsNullOrEmpty(salle.FaculteId))
-            {
-                salle.Faculte = await _facultes
-                .Find(f => f.Id == salle.FaculteId)
-                .FirstOrDefaultAsync();
-            }
-            if (!string.IsNullOrEmpty(salle.BatimentId))
-            {
-                salle.Batiment = await _batiments
-                .Find(b => b.Id == salle.BatimentId)
-                .FirstOrDefaultAsync();
-            };
-            return salle;
+          return await _context.Salles
+       .Include(s => s.Batiment)
+       .Include(s => s.Faculte)
+       .Include(s => s.Specifications)
+       .FirstOrDefaultAsync(s => s.Id == id);
     }
     
 public async Task CreateSalle(Salle salle)
     {
-        await _salles.InsertOneAsync(salle);
-    }
+         var ids = salle.Specifications
+                   .Select(s => s.Id)
+                   .ToList();
 
-public async Task UpdateSalle(string id , Salle salle)
-    {
-        salle.Id = id;
-        await _salles.ReplaceOneAsync(x => x.Id == id,salle);
+    salle.Specifications = await _context.Specifications
+        .Where(s => ids.Contains(s.Id))
+        .ToListAsync();
+         _context.Salles.Add(salle);
+         await _context.SaveChangesAsync();
     }
+public async Task<bool> ChangerEtat(int id)
+{
+    var salle = await _context.Salles.FindAsync(id);
 
-public async Task DeleteSalle(string id)
+    if (salle == null)
+        return false;
+
+    salle.Etat = !salle.Etat;
+
+    await _context.SaveChangesAsync();
+
+    return true;
+}
+
+public async Task UpdateSalle(Salle salle)
+{
+    var existing = await _context.Salles
+        .Include(s => s.Specifications)
+        .FirstOrDefaultAsync(s => s.Id == salle.Id);
+
+    if (existing == null)
+        return;
+
+    existing.Intitule = salle.Intitule;
+    existing.Capacite = salle.Capacite;
+    existing.Capacite_exam = salle.Capacite_exam;
+    existing.Categorie = salle.Categorie;
+    existing.Surface = salle.Surface;
+    existing.Etage = salle.Etage;
+    existing.FaculteId = salle.FaculteId;
+    existing.BatimentId = salle.BatimentId;
+
+    var ids = salle.Specifications.Select(s => s.Id).ToList();
+
+    existing.Specifications = await _context.Specifications
+        .Where(s => ids.Contains(s.Id))
+        .ToListAsync();
+
+    await _context.SaveChangesAsync();
+}
+public async Task DeleteSalle(int id)
     {
-        await _salles.DeleteOneAsync(x => x.Id == id);
-    }
+ var salle = await _context.Salles.FindAsync(id);
+
+    if (salle != null)
+    {
+        _context.Salles.Remove(salle);
+
+        await _context.SaveChangesAsync();
+    }   
+     }
 
 };
