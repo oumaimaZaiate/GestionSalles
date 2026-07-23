@@ -10,7 +10,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { BatimentCreateComponent } from '../create/create';
 import { BatimentEditComponent } from '../edit/edit';
 import { MapComponent } from '../../../components/map/map';
-import { IGX_GRID_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IGX_PAGINATOR_DIRECTIVES, IgxGridComponent, IgxGridModule } from 'igniteui-angular';
+import { IGX_GRID_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IGX_PAGINATOR_DIRECTIVES, IgxActionStripModule, IgxGridComponent, IgxGridModule } from 'igniteui-angular';
 
 type SortKey = 'intitule' | 'latitude' | 'longitude';
 
@@ -32,6 +32,7 @@ type SortKey = 'intitule' | 'latitude' | 'longitude';
     BatimentCreateComponent,
     BatimentEditComponent,
     MapComponent,
+    IgxActionStripModule,
     
   ],
   templateUrl: './list.html',
@@ -80,33 +81,6 @@ export class BatimentListComponent implements OnInit {
         this.cdr.detectChanges();
       },
     });
-  }
-clearSearch(){
-  this.searchText = '';
-  this.grid?.clearSearch();
-}
-onSearchChange(){
-    this.grid?.findNext(this.searchText); 
-}
-  get filteredBatiments(): Batiment[] {
-    let result = this.batiments;
-
-    if (this.searchText.trim()) {
-      const term = this.searchText.trim().toLowerCase();
-      result = result.filter((b) => b.intitule.toLowerCase().includes(term));
-    }
-
-    result = [...result].sort((a, b) => {
-      const valA = a[this.sortKey];
-      const valB = b[this.sortKey];
-      const cmp =
-        typeof valA === 'string'
-          ? valA.localeCompare(valB as string)
-          : (valA as number) - (valB as number);
-      return this.sortAsc ? cmp : -cmp;
-    });
-
-    return result;
   }
 
   sortBy(key: SortKey): void {

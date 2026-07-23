@@ -7,6 +7,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGX_TOOLTIP_DIRECTIVES, IgxButtonDirective, IgxIconButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IGX_PAGINATOR_DIRECTIVES } from 'igniteui-angular/paginator';
 import { IGX_INPUT_GROUP_DIRECTIVES, IgxDialogComponent } from 'igniteui-angular';
+import { IgxActionStripModule } from 'igniteui-angular/action-strip';
 import { FormsModule, FormsModule as NgFormsModule } from '@angular/forms';
 import { IGX_DIALOG_DIRECTIVES,  } from 'igniteui-angular/dialog';
 import { SalleCreateComponent } from '../create/create';
@@ -28,6 +29,8 @@ import { Specification } from '../../../models/Specification';
     IgxRippleDirective,
     IgxIconButtonDirective,
     SalleEditComponent,
+    IgxActionStripModule
+
   ],
   templateUrl: './list.html',
   standalone: true,
@@ -114,5 +117,15 @@ openEditDialog(id: number) {
     this.loadSalles();
   }
 
+changerEtat(salle: Salle) {
+  this.salleService.changeEtat(salle.id!).subscribe({
+    next: () => this.loadSalles(),
+    error: err => console.error(err)
+  });
+  
+}
+  logContext(ctx: any) {
+  console.log('context:', ctx);
+}
 
 }

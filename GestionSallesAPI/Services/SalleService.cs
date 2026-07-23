@@ -100,5 +100,6 @@ public async Task DeleteSalle(int id)
         await _context.SaveChangesAsync();
     }   
      }
+     
 
 };

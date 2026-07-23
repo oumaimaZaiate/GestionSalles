@@ -33,7 +33,9 @@ export class SalleService {
   getCategories(): Observable<string[]>{
     return this.http.get<string[]>(`${this.api}/Categories`)
   }
-
+ changeEtat(id: number) {
+  return this.http.patch(`${this.api}/${id}/etat`, {});
+}
 
 
 }

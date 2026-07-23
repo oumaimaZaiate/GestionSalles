@@ -47,7 +47,7 @@ height="600px">
 <span #tooltipEdit="tooltip" igxTooltip>localisation</span>
           </ng-template>
 </igx-column>
-<igx-column header="Modifier" [sortable]="false" [filterable]="false" [pinned]="true" width="110px">
+<!-- <igx-column header="Modifier" [sortable]="false" [filterable]="false" [pinned]="true" width="110px">
           <ng-template igxCell let-cell="cell">
 <button igxIconButton="flat" igxRipple [igxTooltipTarget]="tooltipEdit"
     (click)="openEditDialog(cell.row.data.id)">
@@ -55,7 +55,17 @@ height="600px">
 </button>
 <span #tooltipEdit="tooltip" igxTooltip>Modifier</span>
           </ng-template>
-</igx-column>
+</igx-column> -->
+<igx-action-strip #actionStrip>
+    <button
+        igxIconButton="flat"
+        igxRipple
+        [igxTooltipTarget]="tooltipEdit"
+        (click)="openEditDialog(actionStrip.context.data.id)">
+        <igx-icon>edit</igx-icon>
+    </button>
+    <span #tooltipEdit="tooltip" igxTooltip>Modifier</span>
+    </igx-action-strip>
  <igx-paginator [perPage]="15"></igx-paginator>
 </igx-grid>
  <!-- Dialogue Ajouter -->
