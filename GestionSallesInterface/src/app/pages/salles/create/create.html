@@ -1,24 +1,24 @@
 <form class="app-form" [formGroup]="form" (ngSubmit)="createSalle()">
 
   <div class="app-field">
-    <label for="intitule">Intitulé</label>
+    <label for="intitule">Intitulé <span class="required">*</span></label>
     <input id="intitule" type="text" formControlName="intitule">
   </div>
 
   <div class="app-field-row">
     <div class="app-field">
-      <label for="capacite">Capacité</label>
-      <input id="capacite" type="number" formControlName="capacite">
+      <label for="capacite">Capacité <span class="required">*</span></label>
+      <input id="capacite" type="number" formControlName="capacite" min="0">
     </div>
 
     <div class="app-field">
       <label for="capacite_exam">Capacité examen</label>
-      <input id="capacite_exam" type="number" formControlName="capacite_exam">
+      <input id="capacite_exam" type="number" formControlName="capacite_exam" min="0">
     </div>
   </div>
 
   <div class="app-field">
-  <label for="categorie">Catégorie</label>
+  <label for="categorie">Catégorie <span class="required">*</span></label>
   <select id="categorie" formControlName="categorie" class="form-select">
     <option value="">catégorie</option>
     <option *ngFor="let cat of categories" [value]="cat">
@@ -30,13 +30,13 @@
   <div class="app-field-row">
     <div class="app-field">
       <label for="surface">Surface</label>
-      <input id="surface" type="number" formControlName="surface">
+      <input id="surface" type="number" formControlName="surface" min="0">
     </div>
 
    <div class="app-field">
-  <label for="etage">Étage</label>
+  <label for="etage">Étage <span class="required">*</span></label>
   <select id="etage" formControlName="etage" class="form-select">
-    <option value="">étage</option>
+    <option value="">étage </option>
     <option *ngFor="let e of etages" [value]="e">
       {{ e === -1 ? 'Sous-sol (-1)' : e === 0 ? 'Rez-de-chaussée (0)' : 'Étage ' + e }}
     </option>
@@ -46,7 +46,7 @@
 
       <div class="app-field-row">
       <div class="app-field">
-      <label for="faculteId">Faculté</label>
+      <label for="faculteId">Faculté <span class="required">*</span></label>
       <select id="faculteId" formControlName="faculteId" class="form-select">
       <option value="">faculté</option>
 
@@ -56,7 +56,7 @@
       </select>    </div>   
 
       <div class="app-field">
-      <label for="batimentId">Bâtiment</label>
+      <label for="batimentId">Bâtiment <span class="required">*</span></label>
       <select id="batimentId" formControlName="batimentId" class="form-select">
       <option value="">bâtiment</option>
 
@@ -90,7 +90,7 @@
   </div>
   <br>
 </form>
-<igx-dialog #specDialog title="Ajouter des spécifications"  closeOnOutsideSelect="true">
+<igx-dialog #specDialog title="Ajouter des spécifications"  closeOnOutsideSelect="false">
 <div class="spec-checklist">
   <div class="spec-checklist-item" *ngFor="let spec of specificationsSorted">
     <label>

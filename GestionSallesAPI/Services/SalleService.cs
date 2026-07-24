@@ -78,6 +78,7 @@ public async Task UpdateSalle(Salle salle)
     existing.Categorie = salle.Categorie;
     existing.Surface = salle.Surface;
     existing.Etage = salle.Etage;
+    existing.Etat = salle.Etat;
     existing.FaculteId = salle.FaculteId;
     existing.BatimentId = salle.BatimentId;
 

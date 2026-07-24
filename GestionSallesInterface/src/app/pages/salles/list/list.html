@@ -1,26 +1,12 @@
 <div>
-
- 
-
-<!--
-  <igx-input-group type="search" class="search-bar">
-    <igx-prefix>
-      <igx-icon *ngIf="searchText.length === 0">search</igx-icon>
-      <igx-icon *ngIf="searchText.length > 0" (click)="clearSearch()">clear</igx-icon>
-    </igx-prefix>
-    <input
-        igxInput
-        placeholder="Rechercher une salle..."
-        [(ngModel)]="searchText"
-        (ngModelChange)="onSearchChange()" />
-  </igx-input-group>
-<br>
--->
 <igx-grid
     #grid
     [data]="salles"
     [autoGenerate]="false"
     [allowFiltering]="true"
+    [(groupingExpressions)]="groupingExpr"
+    
+    [showGroupArea]="true"
     primaryKey="id"
     width="100%"
     height="600px"
@@ -28,8 +14,20 @@
     (rowMouseLeave)="actionStrip.hide()">
 
       <igx-grid-toolbar>
-          <igx-grid-toolbar-title>Salles</igx-grid-toolbar-title>
-          <igx-grid-toolbar-actions>
+   <igx-grid-toolbar-title>
+  <div class="toolbar-title-wrapper">
+    <span class="switch-label">Salles</span>
+    <button
+        igxIconButton="flat"
+        class="switch-button"
+        (click)="switchView.emit()">
+        <igx-icon>swap_horiz</igx-icon>
+    </button>
+    <span >Bâtiments</span>
+  </div>
+</igx-grid-toolbar-title>
+              
+           <igx-grid-toolbar-actions>
               <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
               <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
               <igx-grid-toolbar-exporter></igx-grid-toolbar-exporter>
@@ -42,8 +40,12 @@
 
       <igx-column field="intitule" header="Intitulé" [sortable]="true" [resizable]="true"></igx-column>
       <igx-column field="capacite" header="Capacité" [sortable]="true" [resizable]="true" dataType="number"></igx-column>
-      <igx-column field="capacite_exam" header="Capacité Exam" [sortable]="true" [resizable]="true" dataType="number"></igx-column>
-      <igx-column field="categorie" header="Catégorie" [sortable]="true" [resizable]="true"></igx-column>
+      <igx-column field="capacite_exam" header="Capacité Exam" [sortable]="true" [resizable]="true" dataType="number">
+        <ng-template igxCell let-cell="cell">
+        {{ cell.value === 0 ? '—' : cell.value }}
+    </ng-template>
+      </igx-column>
+      <igx-column field="categorie" header="Catégorie" [sortable]="true" [resizable]="true" [groupable]="true"></igx-column>
 <igx-column
     field="specifications"
     header="Spécifications"
@@ -51,13 +53,27 @@
     [resizable]="true">
 
     <ng-template igxCell let-cell="cell">
-        {{ formatSpecifications(cell.value) }}
-    </ng-template>
+ <span class="spec-cell">
+            {{ formatSpecifications(cell.value) }}
+        </span>    </ng-template>
 
 </igx-column>
+ <igx-column field="etat" header="Etat" [sortable]="true" dataType="boolean" [groupable]="true" [sortStrategy]="etatSortStrategy"  [resizable]="true">
+    <ng-template igxCell let-cell="cell">
+           <igx-icon
+        [style.font-size.px]="26"
+        [style.width.px]="26"
+        [style.height.px]="26"
+        [ngStyle]="{ color: cell.row.data.etat ? '#22c55e' : '#ef4444' }">
+      {{ cell.row.data.etat ? 'toggle_on' : 'toggle_off' }}
+    </igx-icon>
+    </ng-template>
+</igx-column>
+
       <igx-column field="surface" header="Surface" [sortable]="true" [resizable]="true" dataType="number">
           <ng-template igxCell let-cell="cell">
-              {{ cell.value }} m²
+              {{ cell.value || '—' }}
+               <span *ngIf="cell.value != 0">m²</span>
           </ng-template>
       </igx-column>
 
@@ -75,17 +91,9 @@
           </ng-template>
       </igx-column>
 
-      <igx-column field="batiment.etat" header="Etat" [sortable]="true" [resizable]="true">
-    <ng-template igxCell let-cell="cell">
-        <span [ngClass]="cell.row.data.etat ? 'etat-active' : 'etat-inactive'">
-          {{ cell.row.data.etat ? 'Active' : 'Désactivée' }}
-        </span>
-    </ng-template>
-</igx-column>
-
+     
      
   <igx-action-strip #actionStrip>
-    <igx-grid-pinning-actions></igx-grid-pinning-actions>
     <button
         igxIconButton="flat"
         igxRipple
@@ -94,37 +102,31 @@
         <igx-icon>edit</igx-icon>
     </button>
     <span #tooltipEdit="tooltip" igxTooltip>Modifier</span>
- <button
-    igxIconButton="flat"
-    igxRipple
-    [igxTooltipTarget]="tooltipEtat"
-    [style.width.px]="40"
-    [style.height.px]="40"
-    style="display:flex; align-items:center; justify-content:center;"
-    (click)="changerEtat(actionStrip.context?.data)">
-    <igx-icon
-        [style.font-size.px]="26"
-        [style.width.px]="26"
-        [style.height.px]="26"
-        [ngStyle]="{ color: actionStrip.context?.data?.etat ? '#22c55e' : '#ef4444' }">
-      {{ actionStrip.context?.data?.etat ? 'toggle_on' : 'toggle_off' }}
-    </igx-icon>
-</button>
-<span #tooltipEtat="tooltip" igxTooltip>
-  {{ actionStrip.context?.data?.etat ? 'Désactiver' : 'Activer' }}
-</span>
 </igx-action-strip>
 
       <igx-paginator [perPage]="15"></igx-paginator>
-
+<ng-template igxGroupByRow let-groupRow>
+    <div class="igx-group-label">
+      <igx-icon family="material" class="igx-group-label__icon">group_work</igx-icon>
+      <span class="igx-group-label__column-name">
+        {{ groupRow.expression.fieldName === 'etat' ? 'État' : 'Catégorie' }}:
+      </span>
+      <span class="igx-group-label__text">
+        {{ groupRow.expression.fieldName === 'etat'
+            ? (groupRow.value ? 'Active' : 'Désactivée')
+            : groupRow.value }}
+      </span>
+      <igx-badge [value]="groupRow.records.length" class="igx-group-label__count-badge"></igx-badge>
+    </div>
+  </ng-template>
   </igx-grid>
- <igx-dialog #createDialog title="Ajouter une salle" closeOnOutsideSelect="true">
+ <igx-dialog #createDialog title="Ajouter une salle" closeOnOutsideSelect="false">
     <app-salle-create
         (saved)="onSalleSaved()"
         (cancelled)="onCreateCancelled()">
     </app-salle-create>
   </igx-dialog>
-  <igx-dialog #editDialog title="Modifier la salle" closeOnOutsideSelect="true">
+  <igx-dialog #editDialog title="Modifier la salle" closeOnOutsideSelect="false">
   <app-salle-edit
       [id]="selectedSalleId"
       (saved)="onSalleUpdated()"

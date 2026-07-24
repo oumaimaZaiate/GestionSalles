@@ -1,20 +1,5 @@
 <div class="page"> 
 
-<!--
-<div> 
-  <igx-input-group type="search" class="search-bar">
-    <igx-prefix>
-      <igx-icon *ngIf="searchText.length === 0" >search</igx-icon>
-      <igx-icon *ngIf="searchText.length > 0" (click)="clearSearch()" >clear</igx-icon>
-    </igx-prefix>
-    <input 
-    igxInput
-    placeholder="Rechercher un bâtiment... "
-  [(ngModel)]="searchText"
-  (ngModelChange)="onSearchChange()">
-</igx-input-group>
-</div> 
-<br>-->
 <igx-grid 
 #grid
 [data]="batiments"
@@ -24,7 +9,22 @@ primaryKey="id"
 width="100%"
 height="600px">
 <igx-grid-toolbar>
-  <igx-grid-toolbar-title>Bâtiments</igx-grid-toolbar-title>
+  <igx-grid-toolbar-title>
+     <div class="toolbar-title-wrapper">
+              <span>Salles</span>
+     <button
+          igxButton="contained"
+          class="switch-button"
+          (click)="switchView.emit()">
+          <igx-icon>swap_horiz</igx-icon>
+    
+      </button>
+      <span class="switch-label">Bâtiments</span> 
+
+          </div>
+  </igx-grid-toolbar-title>
+     
+
   <igx-grid-toolbar-actions>
   <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
   <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -47,17 +47,8 @@ height="600px">
 <span #tooltipEdit="tooltip" igxTooltip>localisation</span>
           </ng-template>
 </igx-column>
-<!-- <igx-column header="Modifier" [sortable]="false" [filterable]="false" [pinned]="true" width="110px">
-          <ng-template igxCell let-cell="cell">
-<button igxIconButton="flat" igxRipple [igxTooltipTarget]="tooltipEdit"
-    (click)="openEditDialog(cell.row.data.id)">
-    <igx-icon>edit</igx-icon>
-</button>
-<span #tooltipEdit="tooltip" igxTooltip>Modifier</span>
-          </ng-template>
-</igx-column> -->
+
 <igx-action-strip #actionStrip>
-      <igx-grid-pinning-actions></igx-grid-pinning-actions>
     <button
         igxIconButton="flat"
         igxRipple
@@ -71,7 +62,7 @@ height="600px">
 </igx-grid>
  <!-- Dialogue Ajouter -->
  <igx-dialog #createDialog class="app-dialog" title="Ajouter un bâtiment"
-    closeOnOutsideSelect="true"
+    closeOnOutsideSelect="false"
     (opened)="batimentCreateCmp.refreshMapSize()">
   <app-batiment-create #batimentCreateCmp
       (saved)="onBatimentCreated()"
@@ -79,9 +70,8 @@ height="600px">
   </app-batiment-create>
 </igx-dialog>
 
-  <!-- Dialogue Modifier -->
   <igx-dialog #editDialog class="app-dialog" title="Modifier le bâtiment"
-   closeOnOutsideSelect="true"
+   closeOnOutsideSelect="false"
     (opened)="batimentCreateCmp.refreshMapSize()">
     <app-batiment-edit
         [id]="selectedBatimentId"
@@ -90,7 +80,6 @@ height="600px">
     </app-batiment-edit>
   </igx-dialog>
 
-  <!-- Dialogue confirmation suppression -->
   <igx-dialog #confirmDeleteDialog title="Confirmer la suppression">
     <p>Voulez-vous vraiment supprimer le bâtiment « {{ batimentToDelete?.intitule }} » ?</p>
     <div class="app-form-actions">
@@ -100,11 +89,10 @@ height="600px">
       </button>
     </div>
   </igx-dialog>
-    <igx-dialog #mapDialog class="app-dialog" title="Localisation"
-     closeOnOutsideSelect="true"
+    <igx-dialog #mapDialog class="map-dialog" title="Localisation"
+     closeOnOutsideSelect="false"
      (closed)="selectedBatimentForMap = null">
-    <div *ngIf="selectedBatimentForMap as b">
-      <h2>{{ b.intitule }}</h2>
+    <div class="map-container" *ngIf="selectedBatimentForMap as b">
       <app-map
           [latitude]="b.latitude"
           [longitude]="b.longitude"

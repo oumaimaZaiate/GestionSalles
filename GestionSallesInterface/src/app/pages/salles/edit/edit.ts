@@ -7,11 +7,17 @@ import { Faculte } from '../../../models/faculte';
 import { Batiment } from '../../../models/batiment';
 import { BatimentService } from '../../../services/batiment';
 import { FaculteService } from '../../../services/faculte';
-import { IgxComboComponent, IgxComboModule, IgxDialogComponent, IgxDialogModule, IgxIconButtonDirective, IgxIconComponent } from 'igniteui-angular';
+import { IgxComboComponent, IgxComboModule, IgxDialogComponent, IgxDialogModule, IgxSwitchComponent } from 'igniteui-angular';
 import { Specification } from '../../../models/Specification';
 @Component({
   selector: 'app-salle-edit',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, IgxComboModule, IgxDialogModule],
+  imports: [CommonModule,
+     ReactiveFormsModule, 
+     FormsModule,
+     IgxComboModule, 
+     IgxDialogModule,
+     IgxSwitchComponent,
+],
   templateUrl: './edit.html',
   styleUrl: './edit.css',
 })
@@ -28,7 +34,7 @@ export class SalleEditComponent implements OnChanges {
   @ViewChild('specCombo') specCombo?: IgxComboComponent;
   @ViewChild('specDialog', { static: true }) specDialog!: IgxDialogComponent;
 
-      tempSpecifications: Specification[] = [];
+  tempSpecifications: Specification[] = [];
 
 OpenSpecDialog(): void {
 
@@ -82,13 +88,14 @@ this.form.controls.specifications.setValue([...this.tempSpecifications]);  this.
   form = this.fb.group({
     intitule: ['', Validators.required],
     capacite: [0, Validators.required],
-    capacite_exam: [0, Validators.required],
+    capacite_exam: [0],
     categorie: ['', Validators.required],
     specifications: [[] as Specification[]],
-    surface: [0, Validators.required],
+    surface: [0],
     etage: ['', Validators.required],
     faculteId: [0, Validators.required],
     batimentId: [0, Validators.required],
+    etat:[true]
   });
 
   
@@ -115,6 +122,7 @@ this.form.controls.specifications.setValue([...this.tempSpecifications]);  this.
           etage: salle.etage,
           faculteId: salle.faculteId ?? salle.faculte?.id ?? 0,
           batimentId: salle.batimentId ?? salle.batiment?.id ?? 0,
+          etat:salle.etat,
         });
         this.loading = false;
       },
@@ -156,6 +164,7 @@ this.form.controls.specifications.setValue([...this.tempSpecifications]);  this.
     this.saving = true;
     const salle = this.form.value as Salle;
     salle.id = this.id!;
+    
     this.salleService.updateSalle(this.id, salle).subscribe({
       next: (updated) => {
         this.saving = false;
@@ -204,5 +213,11 @@ ngOnChanges(changes: SimpleChanges): void {
     this.loadCategories();
   }
 }
-
+changerEtat(salle: Salle) {
+  this.salleService.changeEtat(salle.id!).subscribe({
+    next: () => {},
+    error: err => console.error(err)
+  });
+  
+}
 }

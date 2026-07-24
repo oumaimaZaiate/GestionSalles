@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, inject, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -48,6 +48,7 @@ export class BatimentListComponent implements OnInit {
   @ViewChild('confirmDeleteDialog') confirmDeleteDialog!: IgxDialogComponent;
   @ViewChild('mapDialog') mapDialog!: IgxDialogComponent;   
   @ViewChild('grid', { static: false }) grid!: IgxGridComponent;
+@Output() switchView = new EventEmitter<void>();
 
   selectedBatimentForMap: Batiment | null = null;
   batiments: Batiment[] = [];

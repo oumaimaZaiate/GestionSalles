@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, OnInit, Output, ViewChild } from '@angular/core';
 import { SalleService } from '../../../services/salle';
 import { Salle } from '../../../models/salle';
 import {CommonModule} from '@angular/common'
@@ -6,7 +6,7 @@ import { IGX_GRID_DIRECTIVES, IgxGridComponent } from 'igniteui-angular/grids/gr
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGX_TOOLTIP_DIRECTIVES, IgxButtonDirective, IgxIconButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IGX_PAGINATOR_DIRECTIVES } from 'igniteui-angular/paginator';
-import { IGX_INPUT_GROUP_DIRECTIVES, IgxDialogComponent } from 'igniteui-angular';
+import { DefaultSortingStrategy, IGX_INPUT_GROUP_DIRECTIVES, IgxBadgeComponent, IgxDialogComponent, ISortingExpression, SortingDirection } from 'igniteui-angular';
 import { IgxActionStripModule } from 'igniteui-angular/action-strip';
 import { FormsModule, FormsModule as NgFormsModule } from '@angular/forms';
 import { IGX_DIALOG_DIRECTIVES,  } from 'igniteui-angular/dialog';
@@ -29,7 +29,9 @@ import { Specification } from '../../../models/Specification';
     IgxRippleDirective,
     IgxIconButtonDirective,
     SalleEditComponent,
-    IgxActionStripModule
+    IgxActionStripModule,
+     IgxBadgeComponent
+  
 
   ],
   templateUrl: './list.html',
@@ -37,17 +39,26 @@ import { Specification } from '../../../models/Specification';
 })
 export class SalleListComponent implements OnInit{
     @ViewChild('grid', { static: false }) grid!: IgxGridComponent;
-  @ViewChild('createDialog', { static: true }) createDialog!: IgxDialogComponent;
- @ViewChild('editDialog') editDialog!: IgxDialogComponent;
-
-  selectedSalleId: number | null = null;
-
+    @ViewChild('createDialog', { static: true }) createDialog!: IgxDialogComponent;
+    @ViewChild('editDialog') editDialog!: IgxDialogComponent;
+    @Output() switchView = new EventEmitter<void>();
   private salleService = inject(SalleService);
-private cdr = inject(ChangeDetectorRef);
+  private cdr = inject(ChangeDetectorRef);
   
-  salles: Salle[] =[];
-    searchText = '';
-
+      selectedSalleId: number | null = null;
+      salles: Salle[] =[];
+      searchText = '';
+  // public groupingExpr: ISortingExpression[] = [
+  //   {
+  //     dir: SortingDirection.Desc,
+  //     fieldName: 'etat',
+  //     ignoreCase: false,
+  //     strategy: DefaultSortingStrategy.instance()
+  //   }
+  // ];
+   public groupingExpr: ISortingExpression[] = []
+   public etatSortStrategy = DefaultSortingStrategy.instance();
+   
   loadSalles(){
     this.salleService.getSalles().subscribe({
       next: (data) => {
@@ -59,6 +70,7 @@ private cdr = inject(ChangeDetectorRef);
       }
     });
   }
+
   formatSpecifications(specs: Specification[] | null | undefined): string {
   if (!specs || specs.length === 0) {
     return '';
@@ -124,8 +136,6 @@ changerEtat(salle: Salle) {
   });
   
 }
-  logContext(ctx: any) {
-  console.log('context:', ctx);
-}
+  
 
 }

@@ -9,6 +9,7 @@ export interface Salle {
     categorie:string;
     surface:number;
     etage:string;
+    etat:boolean;
     faculteId:number;
     batimentId:number;
     faculte?:Faculte;

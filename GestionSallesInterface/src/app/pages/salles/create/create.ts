@@ -88,10 +88,10 @@ loadBatiments() {
   form = this.fb.group({
     intitule: ['',Validators.required],
     capacite: [0,Validators.required],
-    capacite_exam: [0, Validators.required],
+    capacite_exam: [0],
     categorie: ['', Validators.required],
     specifications :[[] as Specification[]],
-    surface: [0, Validators.required],
+    surface: [0],
     etage: ['', Validators.required],
     faculteId: [0, Validators.required],
     batimentId: [0, Validators.required],

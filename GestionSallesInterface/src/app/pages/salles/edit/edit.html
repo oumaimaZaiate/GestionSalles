@@ -1,94 +1,145 @@
 <form class="app-form" [formGroup]="form" (ngSubmit)="updateSalle()">
 
-  <div class="app-field">
-    <label for="intitule">Intitulé</label>
-    <input id="intitule" type="text" formControlName="intitule">
-  </div>
-
-  <div class="app-field-row">
-    <div class="app-field">
-      <label for="capacite">Capacité</label>
-      <input id="capacite" type="number" formControlName="capacite">
+  <div class="etat-field" [ngClass]="form.controls.etat.value ? 'etat-active-bg' : 'etat-inactive-bg'">
+    <div class="etat-field-label">
+      <span class="etat-dot" [ngClass]="form.controls.etat.value ? 'dot-active' : 'dot-inactive'"></span>
+      <span>État de la salle</span>
     </div>
-    <div class="app-field">
-      <label for="capacite_exam">Capacité examen</label>
-      <input id="capacite_exam" type="number" formControlName="capacite_exam">
+    <div class="etat-switch-wrapper">
+      <igx-switch formControlName="etat">
+        {{ form.controls.etat.value ? 'Active' : 'Désactivée' }}
+      </igx-switch>
     </div>
   </div>
 
-<div class="app-field">
-  <label for="categorie">Catégorie</label>
-  <select id="categorie" formControlName="categorie" class="form-select">
-    <option value="">catégorie</option>
-    <option *ngFor="let cat of categories" [value]="cat">
-      {{ cat }}
-    </option>
-  </select>
-</div>       
+  <div class="form-body" [class.fields-locked]="!form.controls.etat.value">
 
-
-  
-  <div class="app-field-row">
-    <div class="app-field">
-      <label for="surface">Surface</label>
-      <input id="surface" type="number" formControlName="surface">
+    <div class="etat-warning" *ngIf="!form.controls.etat.value">
+      ⚠️ Activez la salle pour modifier ses informations.
     </div>
-    <div class="app-field">
-  <label for="etage">Étage</label>
-  <select id="etage" formControlName="etage" class="form-select">
-    <option value="">étage</option>
-    <option *ngFor="let e of etages" [value]="e">
-      {{ e === -1 ? 'Sous-sol (-1)' : e === 0 ? 'Rez-de-chaussée (0)' : 'Étage ' + e }}
-    </option>
-  </select>
-</div>
-  </div>
 
-  <div class="app-field-row">
     <div class="app-field">
-      <label for="faculteId">Faculté</label>
-      <select id="faculteId" formControlName="faculteId" class="form-select">
-        <option value="">faculté</option>
-        <option *ngFor="let faculte of facultes" [value]="faculte.id">
-          {{ faculte.intitule }}
-        </option>
+      <label for="intitule">Intitulé</label>
+      <input
+          id="intitule"
+          type="text"
+          formControlName="intitule"
+          [readOnly]="!form.controls.etat.value">
+    </div>
+
+    <div class="app-field-row">
+      <div class="app-field">
+        <label for="capacite">Capacité</label>
+        <input
+            id="capacite"
+            type="number"
+            formControlName="capacite"
+            [readOnly]="!form.controls.etat.value">
+      </div>
+      <div class="app-field">
+        <label for="capacite_exam">Capacité examen</label>
+        <input
+            id="capacite_exam"
+            type="number"
+            formControlName="capacite_exam"
+            [readOnly]="!form.controls.etat.value">
+      </div>
+    </div>
+
+    <div class="app-field">
+      <label for="categorie">Catégorie</label>
+      <select
+          id="categorie"
+          formControlName="categorie"
+          class="form-select"
+          [attr.disabled]="!form.controls.etat.value ? true : null">
+        <option value="">catégorie</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
       </select>
     </div>
-    <div class="app-field">
-      <label for="batimentId">Bâtiment</label>
-      <select id="batimentId" formControlName="batimentId" class="form-select">
-        <option value="">bâtiment</option>
-        <option *ngFor="let batiment of batiments" [value]="batiment.id">
-          {{ batiment.intitule }}
-        </option>
-      </select>
-    </div>
-  </div>
 
-  <div class="app-field">
+    <div class="app-field-row">
+      <div class="app-field">
+        <label for="surface">Surface</label>
+        <input
+            id="surface"
+            type="number"
+            formControlName="surface"
+            [readOnly]="!form.controls.etat.value">
+      </div>
+      <div class="app-field">
+        <label for="etage">Étage</label>
+        <select
+            id="etage"
+            formControlName="etage"
+            class="form-select"
+            [attr.disabled]="!form.controls.etat.value ? true : null">
+          <option value="">étage</option>
+          <option *ngFor="let e of etages" [value]="e">
+            {{ e === -1 ? 'Sous-sol (-1)' : e === 0 ? 'Rez-de-chaussée (0)' : 'Étage ' + e }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="app-field-row">
+      <div class="app-field">
+        <label for="faculteId">Faculté</label>
+        <select
+            id="faculteId"
+            formControlName="faculteId"
+            class="form-select"
+            [attr.disabled]="!form.controls.etat.value ? true : null">
+          <option value="">faculté</option>
+          <option *ngFor="let faculte of facultes" [value]="faculte.id">{{ faculte.intitule }}</option>
+        </select>
+      </div>
+      <div class="app-field">
+        <label for="batimentId">Bâtiment</label>
+        <select
+            id="batimentId"
+            formControlName="batimentId"
+            class="form-select"
+            [attr.disabled]="!form.controls.etat.value ? true : null">
+          <option value="">bâtiment</option>
+          <option *ngFor="let batiment of batiments" [value]="batiment.id">{{ batiment.intitule }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="app-field">
   <div class="spec-header">
     <label for="specifications">Spécifications</label>
-      <button type="button" class="spec-add-btn" (click)="OpenSpecDialog()">
+    <button
+        type="button"
+        class="spec-add-btn"
+        [disabled]="!form.controls.etat.value"
+        (click)="form.controls.etat.value && OpenSpecDialog()">
       + Ajouter
     </button>
   </div>
-<div class="spec-scroll-panel">
-    <div class="spec-item" *ngFor="let spec of selectedSpecifications">
+  <div class="spec-scroll-panel" [class.spec-locked]="!form.controls.etat.value">
+    <div
+        class="spec-item"
+        [class.spec-item-locked]="!form.controls.etat.value"
+        *ngFor="let spec of selectedSpecifications">
       <span>{{ spec.nom }}</span>
     </div>
     <div class="spec-empty" *ngIf="selectedSpecifications.length === 0">
       Aucune spécification sélectionnée
     </div>
+  </div>
 </div>
-</div>
- 
+
+  </div>
+
   <div class="app-form-actions">
     <button type="button" (click)="onCancel()">Annuler</button>
     <button type="submit" [disabled]="form.invalid || saving">
       {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
     </button>
   </div>
- <br>
+  <br>
 </form>
 <igx-dialog #specDialog title="Ajouter des spécifications" closeOnOutsideSelect="true">
   <div class="spec-checklist">

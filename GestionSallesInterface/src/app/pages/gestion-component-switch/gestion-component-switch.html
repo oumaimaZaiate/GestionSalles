@@ -4,20 +4,7 @@
     {{ afficherSalles ? 'Liste des salles' : 'Liste des bâtiments' }}
   </h1>
 
-  <button
-      igxButton="contained"
-      class="switch-button"
-      (click)="switchView()">
-
-      <igx-icon>swap_horiz</igx-icon>
-
-      {{ afficherSalles ? 'Bâtiments' : 'Salles' }}
-
-  </button>
-
 </div>
+<app-salle-list *ngIf="afficherSalles" (switchView)="switchView()"></app-salle-list>
+<app-batiment-list *ngIf="!afficherSalles" (switchView)="switchView()"></app-batiment-list>
 
-
-<app-salle-list *ngIf="afficherSalles"></app-salle-list>
-
-<app-batiment-list *ngIf="!afficherSalles"></app-batiment-list>
