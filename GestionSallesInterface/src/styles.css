@@ -137,9 +137,15 @@
 
 .switch-label {
   color: var(--color-accent-blue);
-  font-weight: 500;
   cursor: pointer;
   border: 1px solid #2196f3;
+  border-radius: var(--radius);
+  background: var(--color-bg-field);
+  padding: 8px 10px;
+} 
+.switch-label-non {
+  cursor: pointer;
+  border: 1px solid #f9fcff;
   border-radius: var(--radius);
   background: var(--color-bg-field);
   padding: 8px 10px;

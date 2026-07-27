@@ -11,7 +11,7 @@ height="600px">
 <igx-grid-toolbar>
   <igx-grid-toolbar-title>
      <div class="toolbar-title-wrapper">
-              <span>Salles</span>
+              <span class="switch-label-non">Salles</span>
      <button
           igxButton="contained"
           class="switch-button"
@@ -89,21 +89,7 @@ height="600px">
       </button>
     </div>
   </igx-dialog>
-    <!-- <igx-dialog #mapDialog class="map-dialog" title="Localisation"
-     closeOnOutsideSelect="false"
-     (closed)="selectedBatimentForMap = null">
-    <div class="map-container" *ngIf="selectedBatimentForMap as b">
-      <app-map
-          [latitude]="b.latitude"
-          [longitude]="b.longitude"
-          [titre]="b.intitule">
-      </app-map>
-    </div>
-
-    <div class="app-form-actions">
-      <button type="button" (click)="onCloseMapDialog()">Fermer</button>
-    </div>
-  </igx-dialog> -->
+  
 
   <div class="custom-modal-backdrop" *ngIf="selectedBatimentForMap" (click)="onCloseMapDialog()">
   <div class="custom-modal" (click)="$event.stopPropagation()">

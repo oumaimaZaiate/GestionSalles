@@ -20,6 +20,7 @@
     "@angular/router": "^22.0.0",
     "bootstrap": "^5.3.8",
     "igniteui-angular": "^22.0.3",
+    "igniteui-angular-i18n": "^22.0.4",
     "leaflet": "^1.9.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

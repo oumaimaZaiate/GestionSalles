@@ -36,7 +36,6 @@ type SortKey = 'intitule' | 'latitude' | 'longitude';
     
   ],
   templateUrl: './list.html',
-  styleUrl: './list.css',
 })
 export class BatimentListComponent implements OnInit {
   private batimentService = inject(BatimentService);

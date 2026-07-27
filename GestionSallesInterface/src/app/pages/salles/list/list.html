@@ -23,7 +23,7 @@
         (click)="switchView.emit()">
         <igx-icon>swap_horiz</igx-icon>
     </button>
-    <span >Bâtiments</span>
+    <span class="switch-label-non">Bâtiments</span>
   </div>
 </igx-grid-toolbar-title>
               
@@ -39,8 +39,8 @@
       </igx-grid-toolbar>
 
       <igx-column field="intitule" header="Intitulé" [sortable]="true" [resizable]="true"></igx-column>
-      <igx-column field="capacite" header="Capacité" [sortable]="true" [resizable]="true" dataType="number"></igx-column>
-      <igx-column field="capacite_exam" header="Capacité Exam" [sortable]="true" [resizable]="true" dataType="number">
+      <igx-column field="capacite" header="Capacité" [sortable]="true" [resizable]="true" [groupable]="true" dataType="number"></igx-column>
+      <igx-column field="capacite_exam" header="Capacité Exam" [sortable]="true" [resizable]="true" [groupable]="true" dataType="number">
         <ng-template igxCell let-cell="cell">
         {{ cell.value === 0 ? '—' : cell.value }}
     </ng-template>
@@ -70,22 +70,22 @@
     </ng-template>
 </igx-column>
 
-      <igx-column field="surface" header="Surface" [sortable]="true" [resizable]="true" dataType="number">
+      <igx-column field="surface" header="Surface" [sortable]="true" [resizable]="true" dataType="number" [groupable]="true">
           <ng-template igxCell let-cell="cell">
               {{ cell.value || '—' }}
                <span *ngIf="cell.value != 0">m²</span>
           </ng-template>
       </igx-column>
 
-      <igx-column field="etage" header="Étage" [sortable]="true" [resizable]="true"></igx-column>
+      <igx-column field="etage" header="Étage" [sortable]="true" [resizable]="true" [groupable]="true"></igx-column>
 
-      <igx-column field="faculte.intitule" header="Faculté" [sortable]="true" [resizable]="true">
+      <igx-column field="faculte.intitule" header="Faculté" [sortable]="true" [resizable]="true" [groupable]="true">
           <ng-template igxCell let-cell="cell">
               {{ cell.row.data.faculte?.intitule || '—' }}
           </ng-template>
       </igx-column>
 
-      <igx-column field="batiment.intitule" header="Bâtiment" [sortable]="true" [resizable]="true">
+      <igx-column field="batiment.intitule" header="Bâtiment" [sortable]="true" [resizable]="true" [groupable]="true">
           <ng-template igxCell let-cell="cell">
               {{ cell.row.data.batiment?.intitule || '—' }}
           </ng-template>

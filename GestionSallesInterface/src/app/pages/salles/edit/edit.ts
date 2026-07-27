@@ -19,7 +19,6 @@ import { Specification } from '../../../models/Specification';
      IgxSwitchComponent,
 ],
   templateUrl: './edit.html',
-  styleUrl: './edit.css',
 })
 export class SalleEditComponent implements OnChanges {
   private salleService = inject(SalleService);
