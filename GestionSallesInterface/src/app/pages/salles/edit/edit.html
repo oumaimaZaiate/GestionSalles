@@ -34,7 +34,8 @@
             id="capacite"
             type="number"
             formControlName="capacite"
-            [readOnly]="!form.controls.etat.value">
+            [readOnly]="!form.controls.etat.value"
+            min="0">
       </div>
       <div class="app-field">
         <label for="capacite_exam">Capacité examen</label>
@@ -42,7 +43,8 @@
             id="capacite_exam"
             type="number"
             formControlName="capacite_exam"
-            [readOnly]="!form.controls.etat.value">
+            [readOnly]="!form.controls.etat.value"
+            min="0">
       </div>
     </div>
 
@@ -65,7 +67,8 @@
             id="surface"
             type="number"
             formControlName="surface"
-            [readOnly]="!form.controls.etat.value">
+            [readOnly]="!form.controls.etat.value"
+            min="0">
       </div>
       <div class="app-field">
         <label for="etage">Étage</label>

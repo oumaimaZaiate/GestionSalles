@@ -89,7 +89,7 @@ height="600px">
       </button>
     </div>
   </igx-dialog>
-    <igx-dialog #mapDialog class="map-dialog" title="Localisation"
+    <!-- <igx-dialog #mapDialog class="map-dialog" title="Localisation"
      closeOnOutsideSelect="false"
      (closed)="selectedBatimentForMap = null">
     <div class="map-container" *ngIf="selectedBatimentForMap as b">
@@ -103,6 +103,23 @@ height="600px">
     <div class="app-form-actions">
       <button type="button" (click)="onCloseMapDialog()">Fermer</button>
     </div>
-  </igx-dialog>
+  </igx-dialog> -->
+
+  <div class="custom-modal-backdrop" *ngIf="selectedBatimentForMap" (click)="onCloseMapDialog()">
+  <div class="custom-modal" (click)="$event.stopPropagation()">
+   
+<button class="close-map-btn"
+          (click)="onCloseMapDialog()">
+    <igx-icon>close</igx-icon>
+  </button>
+    <div class="custom-modal-body">
+      <app-map
+          [latitude]="selectedBatimentForMap.latitude"
+          [longitude]="selectedBatimentForMap.longitude"
+          [titre]="selectedBatimentForMap.intitule">
+      </app-map>
+    </div>
+  </div>
+</div>
 </div>
 

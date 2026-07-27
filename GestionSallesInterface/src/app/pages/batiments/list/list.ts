@@ -95,11 +95,13 @@ export class BatimentListComponent implements OnInit {
 
  voirLocalisation(b: Batiment): void {
     this.selectedBatimentForMap = b;
-    this.mapDialog.open();
+    // this.mapDialog.open();
   }
 
   onCloseMapDialog(): void {
-    this.mapDialog.close();
+    // this.mapDialog.close();
+     this.selectedBatimentForMap = null;
+
   }
 
   openCreateDialog(): void {
