@@ -21,7 +21,7 @@
     <div id="map" #mapContainer></div>
   </div>
 
-  <div class="app-field-row">
+  <!-- <div class="app-field-row">
     <div class="app-field">
       <label for="latitude">Latitude</label>
       <input id="latitude" type="number" step="any" formControlName="latitude" readonly />
@@ -39,7 +39,7 @@
         <span *ngIf="f.longitude.errors?.['min'] || f.longitude.errors?.['max']">Longitude invalide (-180 à 180).</span>
       </span>
     </div>
-  </div>
+  </div> -->
 
   <span class="app-field-error" *ngIf="error">{{ error }}</span>
 
